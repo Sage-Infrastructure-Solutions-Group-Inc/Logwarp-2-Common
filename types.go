@@ -18,3 +18,10 @@ type Record struct {
 	Timestamp time.Time
 	Content   []byte
 }
+
+type IngestQueueConfig struct {
+	Plugin       string                 `yaml:"plugin"`
+	PluginConfig map[string]interface{} `yaml:"plugin-config"` // Use a map to store varying options
+	Compression  string                 `yaml:"compression"`
+	Id           string                 `yaml:"id"`
+}
