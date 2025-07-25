@@ -1,12 +1,14 @@
 package ingest_input_plugin
 
 import (
-	logwarp_common "github.com/Sage-Infrastructure-Solutions-Group-Inc/Logwarp-2-Common"
+	"github.com/Sage-Infrastructure-Solutions-Group-Inc/Logwarp-2-Common/ingest_queue_plugin"
 )
 
 // InputPlugin defines the common interface that all input plugins must implement.
 type InputPlugin interface {
-	Start(config map[string]interface{}, queues []logwarp_common.IngestQueueConfig) error // Start listening on configured ports or connections
-	Stop() error                                                                          // Stop listening and clean up resources
-	Flush() error                                                                         // Flush the current buffer in the input plugin
+	Configure(config map[string]interface{}, queues []ingest_queue_plugin.QueuePlugin) error // Configure the plugin
+	Stop() error                                                                             // Stop listening and clean up resources
+	Flush() error                                                                            // Flush the current buffer in the input plugin
+	Run()                                                                                    // Run the plugin
+	EnableTestMode()
 }

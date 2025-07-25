@@ -7,4 +7,5 @@ import (
 type QueuePlugin interface {
 	Config(config map[string]interface{}) error
 	Enqueue(batch logwarp_common.Batch) error
+	Test() bool
 }
