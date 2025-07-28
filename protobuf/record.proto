@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package record;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "./protobuf";
+
+message Record {
+  google.protobuf.Timestamp timestamp = 1;
+  bytes content = 2;
+}
+
+message RecordList {
+  repeated Record records = 1;
+}

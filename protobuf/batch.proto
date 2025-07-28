@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package logwarp_common;
+
+
+option go_package = "./protobuf";
+
+import "google/protobuf/timestamp.proto";
+
+enum CompressionMethod {
+  NONE = 0;
+  LZ4 = 1;
+  SNAPPY = 2;
+}
+
+message Batch {
+  bytes records = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  CompressionMethod compression = 3;
+}
