@@ -12,6 +12,7 @@ import (
 type DummyQueuePlugin struct {
 	logGroup    []any
 	compression protobuf.CompressionMethod
+	ThrowError  bool
 }
 
 func (d *DummyQueuePlugin) Config(config map[string]interface{}) error {
@@ -44,19 +45,20 @@ func (d *DummyQueuePlugin) Config(config map[string]interface{}) error {
 		slog.Warn(fmt.Sprintf("The provided compression method is not supported: %v (Defaulting to None)"))
 		d.compression = protobuf.CompressionMethod(0)
 	}
+	d.ThrowError = false // for testing error handling on queue failure.
 	return nil
 }
 
-func (d *DummyQueuePlugin) Enqueue(records protobuf.RecordList) {
+func (d *DummyQueuePlugin) Enqueue(records protobuf.RecordList) error {
 	//slog.Debug(fmt.Sprintf("Enqueue Batch: %v", records), d.logGroup...)
 	if len(records.Records) == 0 {
 		slog.Debug(fmt.Sprintf("No records to process (The length of the submitted data is: %d", len(records.Records)), d.logGroup...)
-		return
+		return nil
 	}
 	bytesEncodedRecords, err := proto.Marshal(&records)
 	if err != nil {
 		slog.Error(fmt.Sprintf("Enqueue Error: %v", err.Error()), d.logGroup...)
-		return
+		return err
 	}
 	finalRecordBytes, err := performCompression(bytesEncodedRecords, d.compression, d.logGroup)
 	if err != nil {
@@ -64,7 +66,7 @@ func (d *DummyQueuePlugin) Enqueue(records protobuf.RecordList) {
 	}
 	if len(finalRecordBytes) == 0 {
 		slog.Error(fmt.Sprintf("Empty message for queue due to previous failures."), d.logGroup...)
-		return
+		return err
 	}
 	batch := protobuf.Batch{
 		Records:     finalRecordBytes,
@@ -74,10 +76,15 @@ func (d *DummyQueuePlugin) Enqueue(records protobuf.RecordList) {
 	batchBytes, err := proto.Marshal(&batch)
 	if err != nil {
 		slog.Error(fmt.Sprintf("Enqueue Error: %v (Could not create Batch)", err.Error()), d.logGroup...)
-		return
+		return err
+	}
+	if d.ThrowError {
+		slog.Debug(fmt.Sprintf("Enqueue Error: %v (For Testing)", d.ThrowError), d.logGroup...)
+		return fmt.Errorf("Enqueue Error: (For Testing)")
 	}
 	slog.Debug(fmt.Sprintf("Enqueue Batch with Length: %d Values: %v", len(batchBytes), batchBytes), d.logGroup...)
 	slog.Warn(fmt.Sprintf("This is a dummy queue and as such no data is stored"), d.logGroup...)
+	return nil
 }
 
 func (d *DummyQueuePlugin) Test() bool {

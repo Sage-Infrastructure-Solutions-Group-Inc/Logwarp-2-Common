@@ -11,4 +11,6 @@ type InputPlugin interface {
 	Flush() error                                                                            // Flush the current buffer in the input plugin
 	Run()                                                                                    // Run the plugin
 	EnableTestMode()
+	Cache() error
+	ProcessCache() error
 }
