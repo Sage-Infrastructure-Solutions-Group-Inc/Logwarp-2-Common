@@ -6,6 +6,6 @@ import (
 
 type QueuePlugin interface {
 	Config(config map[string]interface{}) error
-	Enqueue(records protobuf.RecordList) error
+	Enqueue(records protobuf.RecordList, inputPluginName string) error
 	Test() bool
 }

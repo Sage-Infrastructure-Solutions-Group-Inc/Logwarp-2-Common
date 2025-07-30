@@ -6,6 +6,7 @@ package logwarp_common;
 option go_package = "./protobuf";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
 
 enum CompressionMethod {
   NONE = 0;
@@ -14,7 +15,12 @@ enum CompressionMethod {
 }
 
 message Batch {
-  bytes records = 1;
-  google.protobuf.Timestamp timestamp = 2;
-  CompressionMethod compression = 3;
+  google.protobuf.Timestamp timestamp = 1;
+  CompressionMethod compression = 2;
+  string inputPlugin = 3;
+  string queuePlugin = 4;
+  string submitterHostname = 5;
+  map<string, google.protobuf.Value> envValues = 6;
+  bytes records = 7;
+
 }

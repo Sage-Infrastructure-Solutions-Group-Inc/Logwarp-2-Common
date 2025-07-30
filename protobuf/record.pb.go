@@ -9,6 +9,7 @@ package protobuf
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	structpb "google.golang.org/protobuf/types/known/structpb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -23,9 +24,11 @@ const (
 )
 
 type Record struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Content       []byte                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	state         protoimpl.MessageState     `protogen:"open.v1"`
+	Timestamp     *timestamppb.Timestamp     `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Content       []byte                     `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
+	SrcNet        string                     `protobuf:"bytes,2,opt,name=srcNet,proto3" json:"srcNet,omitempty"`
+	Meta          map[string]*structpb.Value `protobuf:"bytes,3,rep,name=meta,proto3" json:"meta,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,6 +73,20 @@ func (x *Record) GetTimestamp() *timestamppb.Timestamp {
 func (x *Record) GetContent() []byte {
 	if x != nil {
 		return x.Content
+	}
+	return nil
+}
+
+func (x *Record) GetSrcNet() string {
+	if x != nil {
+		return x.SrcNet
+	}
+	return ""
+}
+
+func (x *Record) GetMeta() map[string]*structpb.Value {
+	if x != nil {
+		return x.Meta
 	}
 	return nil
 }
@@ -122,10 +139,15 @@ var File_protobuf_record_proto protoreflect.FileDescriptor
 
 const file_protobuf_record_proto_rawDesc = "" +
 	"\n" +
-	"\x15protobuf/record.proto\x12\x06record\x1a\x1fgoogle/protobuf/timestamp.proto\"\\\n" +
+	"\x15protobuf/record.proto\x12\x06record\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/protobuf/struct.proto\"\xf3\x01\n" +
 	"\x06Record\x128\n" +
 	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\fR\acontent\"6\n" +
+	"\acontent\x18\x04 \x01(\fR\acontent\x12\x16\n" +
+	"\x06srcNet\x18\x02 \x01(\tR\x06srcNet\x12,\n" +
+	"\x04meta\x18\x03 \x03(\v2\x18.record.Record.MetaEntryR\x04meta\x1aO\n" +
+	"\tMetaEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12,\n" +
+	"\x05value\x18\x02 \x01(\v2\x16.google.protobuf.ValueR\x05value:\x028\x01\"6\n" +
 	"\n" +
 	"RecordList\x12(\n" +
 	"\arecords\x18\x01 \x03(\v2\x0e.record.RecordR\arecordsB\fZ\n" +
@@ -143,20 +165,24 @@ func file_protobuf_record_proto_rawDescGZIP() []byte {
 	return file_protobuf_record_proto_rawDescData
 }
 
-var file_protobuf_record_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_protobuf_record_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_protobuf_record_proto_goTypes = []any{
 	(*Record)(nil),                // 0: record.Record
 	(*RecordList)(nil),            // 1: record.RecordList
-	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
+	nil,                           // 2: record.Record.MetaEntry
+	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(*structpb.Value)(nil),        // 4: google.protobuf.Value
 }
 var file_protobuf_record_proto_depIdxs = []int32{
-	2, // 0: record.Record.timestamp:type_name -> google.protobuf.Timestamp
-	0, // 1: record.RecordList.records:type_name -> record.Record
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	3, // 0: record.Record.timestamp:type_name -> google.protobuf.Timestamp
+	2, // 1: record.Record.meta:type_name -> record.Record.MetaEntry
+	0, // 2: record.RecordList.records:type_name -> record.Record
+	4, // 3: record.Record.MetaEntry.value:type_name -> google.protobuf.Value
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_protobuf_record_proto_init() }
@@ -170,7 +196,7 @@ func file_protobuf_record_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protobuf_record_proto_rawDesc), len(file_protobuf_record_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

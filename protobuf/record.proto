@@ -3,12 +3,16 @@ syntax = "proto3";
 package record;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
 
 option go_package = "./protobuf";
 
 message Record {
   google.protobuf.Timestamp timestamp = 1;
-  bytes content = 2;
+  bytes content = 4;
+  string srcNet = 2;
+  map<string, google.protobuf.Value> meta = 3;
+
 }
 
 message RecordList {

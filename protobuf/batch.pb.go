@@ -72,12 +72,15 @@ func (CompressionMethod) EnumDescriptor() ([]byte, []int) {
 }
 
 type Batch struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Records       []byte                 `protobuf:"bytes,1,opt,name=records,proto3" json:"records,omitempty"`
-	Timestamp     *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Compression   CompressionMethod      `protobuf:"varint,3,opt,name=compression,proto3,enum=logwarp_common.CompressionMethod" json:"compression,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Timestamp         *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Compression       CompressionMethod      `protobuf:"varint,2,opt,name=compression,proto3,enum=logwarp_common.CompressionMethod" json:"compression,omitempty"`
+	InputPlugin       string                 `protobuf:"bytes,3,opt,name=inputPlugin,proto3" json:"inputPlugin,omitempty"`
+	QueuePlugin       string                 `protobuf:"bytes,4,opt,name=queuePlugin,proto3" json:"queuePlugin,omitempty"`
+	SubmitterHostname string                 `protobuf:"bytes,5,opt,name=submitterHostname,proto3" json:"submitterHostname,omitempty"`
+	Records           []byte                 `protobuf:"bytes,6,opt,name=records,proto3" json:"records,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *Batch) Reset() {
@@ -110,13 +113,6 @@ func (*Batch) Descriptor() ([]byte, []int) {
 	return file_protobuf_batch_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Batch) GetRecords() []byte {
-	if x != nil {
-		return x.Records
-	}
-	return nil
-}
-
 func (x *Batch) GetTimestamp() *timestamppb.Timestamp {
 	if x != nil {
 		return x.Timestamp
@@ -131,15 +127,46 @@ func (x *Batch) GetCompression() CompressionMethod {
 	return CompressionMethod_NONE
 }
 
+func (x *Batch) GetInputPlugin() string {
+	if x != nil {
+		return x.InputPlugin
+	}
+	return ""
+}
+
+func (x *Batch) GetQueuePlugin() string {
+	if x != nil {
+		return x.QueuePlugin
+	}
+	return ""
+}
+
+func (x *Batch) GetSubmitterHostname() string {
+	if x != nil {
+		return x.SubmitterHostname
+	}
+	return ""
+}
+
+func (x *Batch) GetRecords() []byte {
+	if x != nil {
+		return x.Records
+	}
+	return nil
+}
+
 var File_protobuf_batch_proto protoreflect.FileDescriptor
 
 const file_protobuf_batch_proto_rawDesc = "" +
 	"\n" +
-	"\x14protobuf/batch.proto\x12\x0elogwarp_common\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa0\x01\n" +
-	"\x05Batch\x12\x18\n" +
-	"\arecords\x18\x01 \x01(\fR\arecords\x128\n" +
-	"\ttimestamp\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12C\n" +
-	"\vcompression\x18\x03 \x01(\x0e2!.logwarp_common.CompressionMethodR\vcompression*2\n" +
+	"\x14protobuf/batch.proto\x12\x0elogwarp_common\x1a\x1fgoogle/protobuf/timestamp.proto\"\x92\x02\n" +
+	"\x05Batch\x128\n" +
+	"\ttimestamp\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12C\n" +
+	"\vcompression\x18\x02 \x01(\x0e2!.logwarp_common.CompressionMethodR\vcompression\x12 \n" +
+	"\vinputPlugin\x18\x03 \x01(\tR\vinputPlugin\x12 \n" +
+	"\vqueuePlugin\x18\x04 \x01(\tR\vqueuePlugin\x12,\n" +
+	"\x11submitterHostname\x18\x05 \x01(\tR\x11submitterHostname\x12\x18\n" +
+	"\arecords\x18\x06 \x01(\fR\arecords*2\n" +
 	"\x11CompressionMethod\x12\b\n" +
 	"\x04NONE\x10\x00\x12\a\n" +
 	"\x03LZ4\x10\x01\x12\n" +

@@ -1,6 +1,8 @@
 package logwarp_common
 
-import "time"
+import (
+	"time"
+)
 
 type CompressionMethod int
 

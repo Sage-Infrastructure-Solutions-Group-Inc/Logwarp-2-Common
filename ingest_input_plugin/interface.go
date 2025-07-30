@@ -13,4 +13,6 @@ type InputPlugin interface {
 	EnableTestMode()
 	Cache() error
 	ProcessCache() error
+	SupportsLoadBalancedQueue() bool // Returns true if the Queue configuration type is supported
+	SupportsFailOverQueue() bool     // Returns true if the Queue configuration type is supported
 }
